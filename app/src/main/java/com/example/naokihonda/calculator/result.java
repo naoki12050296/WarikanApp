@@ -20,5 +20,4 @@ public class result extends AppCompatActivity {
         resultLabel.setText(String.valueOf(i));
 
     }
-
 }
