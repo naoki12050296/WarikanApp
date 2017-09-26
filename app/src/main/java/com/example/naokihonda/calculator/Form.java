@@ -1,6 +1,8 @@
 package com.example.naokihonda.calculator;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,17 +20,18 @@ import java.lang.reflect.InvocationTargetException;
  * Created by naokihonda on 2017/09/18.
  */
 
-public class Form extends AppCompatActivity{
 
-    public static String EXTRA_SUMPRICE = "com.example.naokihonda.calculator_SUMPRICE";
-    public static String EXTRA_PERSONS = "com.example.naokihonda.calculator_PERSONS";
-    public static Integer warikan = 0;
+public class Form extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+    public static String EXTRA_SUMPRICE = "com.example.naokihonda.calculator_SUMPRICE";
+    public static String EXTRA_PERSONS = "com.example.naokihonda.calculator_PERSONS";
+    public static Integer warikan = 0;
 
     //電卓に計算させる
     public void calculation(View view) {
@@ -104,7 +107,11 @@ public class Form extends AppCompatActivity{
             //次の画面へ
             Intent intent = new Intent(getApplication(), result.class);
             intent.putExtra("EXTRA_WARIKAN", warikan);
+            intent.putExtra("EXTRA_SUMPRICE", sum_price);
+            intent.putExtra("EXTRA_SUMPERSONS", sum_persons);
             startActivityForResult(intent, warikan);
         }
+
+
     }
 }
