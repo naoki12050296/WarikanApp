@@ -20,54 +20,75 @@ import java.text.SimpleDateFormat;
 
 import static com.example.naokihonda.calculator.Form.warikan;
 
+/**
+ * Created by naokihonda on 2017/09/18.
+ */
 
 public class Result extends AppCompatActivity {
 
-    // InsertボタンのClickリスナー
+    // InsertボタンのClickリスナー登録
     private View.OnClickListener buttonInsert_ClickListener = new View.OnClickListener(){
-        public void onClick(View v) {buttonInsert_Click(v);}};
-    /* UpdateボタンのClickリスナー */
-    private View.OnClickListener buttonUpdate_ClickListener = new View.OnClickListener(){
-        public void onClick(View v) {buttonUpdate_Click(v);}};
-    /* DeleteボタンのClickリスナー */
+        //ボタンが押された時に呼ばれるメソッド
+        public void onClick(View v) {
+            buttonInsert_Click(v);
+        }
+    };
+
+    // DeleteボタンのClickリスナー登録
     private View.OnClickListener buttonDelete_ClickListener = new View.OnClickListener(){
-        public void onClick(View v) {buttonDelete_Click(v);}};
-    private String title_name;
+        //ボタンが押された時に呼ばれるメソッド
+        public void onClick(View v) {
+            buttonDelete_Click(v);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        //Intentを受け取る
         Intent intent = getIntent();
+        //Intentに保存されたデータを変数wにwarikanを代入
         int w = intent.getIntExtra("EXTRA_WARIKAN", warikan);
+        //TextViewを取得
         TextView resultLabel = (TextView) findViewById(R.id.resultLabel);
+        //取得したTextViewに割り勘金額をセット、表示
         resultLabel.setText(String.valueOf(w) + "円");
 
-        //ボタンにClickリスナーを設定する。
+        //ボタンにclickListenerを設定
+        //今回のお会計を保存するボタンのIDを取得
         Button buttonInsert = (Button)this.findViewById(R.id.buttonInsert);
+        //↑のボタンにclickListenerをセット
         buttonInsert.setOnClickListener(buttonInsert_ClickListener);
-        Button buttonUpdate = (Button)this.findViewById(R.id.buttonUpdate);
-        buttonUpdate.setOnClickListener(buttonUpdate_ClickListener);
+
+        //履歴を消去するボタンのIDを取得
         Button buttonDelete = (Button)this.findViewById(R.id.buttonDelete);
+        //↑のボタンにclickListenerをセット
         buttonDelete.setOnClickListener(buttonDelete_ClickListener);
     }
 
-    /**
-     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
-     */
-
-    /*
-     * InsertボタンClick処理
-     */
+    //InsertボタンClick処理
     public void buttonInsert_Click(View v){
 
-        //カスタムビューの設定
-        LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        //LayoutInflaterは、指定したxmlのレイアウト(View)リソースを利用できる仕組み
 
+        // コンテキストから取得
+        //LayoutInflater inflater = LayoutInflater.from(this);
+
+        // アクティビティから取得
+        //LayoutInflater inflater = getLayoutInflater();
+
+        // システムサービスから取得
+        //LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+        LayoutInflater inflater = getLayoutInflater();
+
+        //XMLからビューを取得（今後不変のためfinal）
         final View layout = inflater.inflate(R.layout.title_input,null);
 
-        //AlertDialog生成
+        //AlertDialog生成（今後不変のためfinal）
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         //レイアウト設定
@@ -78,31 +99,38 @@ public class Result extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which){
 
+                //ContentValuesクラス = DBテーブルに含まれるカラムをキーとし、カラムに対して設定したい値を保存するためのクラス
+                //ContentValuesクラスのインスタンス生成
                 ContentValues values = new ContentValues();
 
-                /**
-                 * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
-                 */
-
-                DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+                //現在日時をyyyy/MM/dd形式で取得する
                 Date date = new Date(System.currentTimeMillis());
 
+                //AlertDialogの中のEditTextのIDを取得
                 EditText Title = (EditText)layout.findViewById(R.id.title);
+                //String型に変換
                 String title = Title.getText().toString().trim();
 
+                //データ（カラムと値のペア）を保存
                 values.put("Date", String.valueOf(date));
                 values.put("Title", title);
                 values.put("Result", warikan);
 
+                //DBの作成などを行うクラスをインスタンス化
                 UserOpenHelper dbHelper = new UserOpenHelper(Result.this);
+
+                //書き込みを行うので getWritableDatabase()メソッドを使用（読み込みonlyならgetReadableDatabase()メソッド）
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                 long ret;
                 try {
+                    //DBへデータ挿入
                     ret = db.insert("MyTable", null, values);
                 } finally {
                     db.close();
                 }
+                //失敗だった場合と成功だった場合でToastを出す
+                //エラーだった場合、-1が戻り値として返される
                 if (ret == -1) {
                     Toast.makeText(Result.this,"Insert失敗", Toast.LENGTH_SHORT).show();
                 } else {
@@ -124,78 +152,16 @@ public class Result extends AppCompatActivity {
         builder.create().show();
     }
 
-    /*
-      UpdateボタンClick処理*/
-
-    private void buttonUpdate_Click(View v){
-        ContentValues values = new ContentValues();
-        values.put("Age",24);
-        String whereClause = "No = ?";
-        String whereArgs[] = new String[1];
-        whereArgs[0] = "1";
-
-        UserOpenHelper dbHelper = new UserOpenHelper(Result.this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int ret;
-        try {
-            ret = db.update("MyTable", values, whereClause, whereArgs);
-        } finally {
-            db.close();
-        }
-        if (ret == -1){
-            Toast.makeText(this, "Update失敗", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Update成功", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /* DeleteボタンClick処理 */
+    //DeleteボタンClick処理
     private void buttonDelete_Click(View v){
 
+        //DB削除処理
         deleteDatabase("cal.db");
+        //削除したことをユーザーにわかりやすくするため、Toast表示
         Toast.makeText(this, "Delete成功", Toast.LENGTH_SHORT).show();
-
-        /*String whereClause = "No = ?";
-        String whereArgs[] = new String[1];
-        whereArgs[0] = "1";
-
-        UserOpenHelper dbHelper = new UserOpenHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        int ret;
-        try {
-            ret = db.delete("MyTable", whereClause, whereArgs);
-        } finally {
-            db.close();
-        }
-        if (ret == -1){
-            Toast.makeText(this, "Delete失敗", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Delete成功", Toast.LENGTH_SHORT).show();
-        }*/
     }
 }
 
-
-
-    /*
-        //Realmインスタンス取得
-        Realm realm = Realm.getInstance(this);
-
-        //トランザクション開始
-        realm.beginTransaction();
-
-        //Realmインスタンス化
-        User user = new User();
-
-        //値をセット
-        user.setSum_price(sum_price);
-        user.setPersons(persons);
-        user.setResult(warikan);
-
-        realm.commitTransaction();
-
-        realm.close();
-        */
 
 
 

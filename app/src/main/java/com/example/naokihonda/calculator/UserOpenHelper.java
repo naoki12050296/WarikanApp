@@ -18,17 +18,13 @@ public class UserOpenHelper extends SQLiteOpenHelper{
 
     private final static int DB_VER = 1;
 
+    //親クラスのコンストラクタを呼ぶ　第一引数がcontext　第二引数がDB　第三引数はnullでok　第四引数はバージョン
     public UserOpenHelper(Context c){
         super(c,DB_NAME,null,DB_VER);
     }
-
-
-
-    /*
- * onCreateメソッド
- * データベースが作成された時に呼ばれます。
- * テーブルの作成などを行います。
- */
+    //onCreateメソッド
+    //データベースが作成された時に呼ばれます。
+    //テーブルの作成などを行います。
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "";
@@ -38,6 +34,7 @@ public class UserOpenHelper extends SQLiteOpenHelper{
         sql += ",Title string";
         sql += ",Result integer";
         sql += ")";
+        //上記SQLでテーブルを作成
         db.execSQL(sql);
     }
 
