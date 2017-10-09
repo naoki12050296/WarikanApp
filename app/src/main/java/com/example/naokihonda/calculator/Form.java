@@ -1,39 +1,32 @@
 package com.example.naokihonda.calculator;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by naokihonda on 2017/09/18.
  */
 
 
-public class Form extends AppCompatActivity{
+public class Form extends AppCompatActivity {
 
+    //onCreate メソッドは、アクティビティクラスがインスタンス化される時に自動的に処理されるメソッド
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
-    public static String EXTRA_SUMPRICE = "com.example.naokihonda.calculator_SUMPRICE";
-    public static String EXTRA_PERSONS = "com.example.naokihonda.calculator_PERSONS";
+    //割り勘結果の金額のフィールド定義
     public static Integer warikan = 0;
 
-    //電卓に計算させる
+
+    //電卓で計算する
     public void calculation(View view) {
 
         //EditTextを取得
@@ -59,9 +52,7 @@ public class Form extends AppCompatActivity{
             int sum_price = Integer.parseInt(sumPrice);
             int sum_persons = Integer.parseInt(Persons);
 
-            if (sum_price <= sum_persons) {
-                persons.setError("合計人数が合計金額を超えています");
-            } else if (Campaign.equals("")) {
+            if (Campaign.equals("")) {
                 warikan = sum_price / sum_persons;
             } else {
                 campaign = (EditText) findViewById(R.id.campaign);
@@ -105,13 +96,15 @@ public class Form extends AppCompatActivity{
                     break;
             }
             //次の画面へ
-            Intent intent = new Intent(getApplication(), result.class);
+            Intent intent = new Intent(getApplication(), Result.class);
             intent.putExtra("EXTRA_WARIKAN", warikan);
-            intent.putExtra("EXTRA_SUMPRICE", sum_price);
-            intent.putExtra("EXTRA_SUMPERSONS", sum_persons);
             startActivityForResult(intent, warikan);
         }
+    }
 
+    public void listView(View view) {
 
+        Intent intent = new Intent(getApplication(), List.class);
+        startActivity(intent, null);
     }
 }

@@ -16,13 +16,10 @@ public final class UserContract {
     }
 
     public static abstract class Users implements BaseColumns{  //_id
-        public static final String TABLE_NAME = "Accounting_history";
-        public static final String COL_SUMPRICE = "sum_price";
-        public static final String COL_SUMPERSONS = "sum_persons";
-        public static final String COL_CAMPAIGN = "campaign";
-        public static final int COL_RESULT = warikan;
-        public static final String COL_NAME = "name";
-        public static final String COL_SCORE = "score";
+        public static final String TABLE_NAME = "MyTable";
+        public static final String COL_DATE = "date";
+        public static final String COL_TITLE = "title";
+        public static final String COL_RESULT = "result";
     }
 
 
