@@ -1,11 +1,8 @@
 package com.example.naokihonda.calculator;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import static com.example.naokihonda.calculator.Form.warikan;
 
 
 /**
@@ -40,8 +37,8 @@ public class UserOpenHelper extends SQLiteOpenHelper{
 
     /*
      * onUpgradeメソッド
-     * onUpgrade()メソッドはデータベースをバージョンアップした時に呼ばれます。
-     * 現在のレコードを退避し、テーブルを再作成した後、退避したレコードを戻すなどの処理を行います。
+     * onUpgrade()メソッドはデータベースをバージョンアップした時に呼ばれる
+     * 現在のレコードを退避し、テーブルを再作成した後、退避したレコードを戻すなどの処理を行う
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

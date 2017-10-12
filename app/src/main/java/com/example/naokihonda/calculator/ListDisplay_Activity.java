@@ -20,7 +20,8 @@ import android.support.v4.app.DialogFragment;
  * Created by naokihonda on 2017/09/29.
  */
 
-public class List extends AppCompatActivity implements OnDateSetListener {
+//onDateSetListener = ユーザーが日付の選択を終了したことを示すために使用されるリスナー
+public class ListDisplay_Activity extends AppCompatActivity implements OnDateSetListener {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class List extends AppCompatActivity implements OnDateSetListener {
         //DBの中身を一覧表示させる
         //DBの作成などを行うクラスをインスタンス化
         UserOpenHelper dbHelper = new UserOpenHelper(this);
+        //SQLiteDatabase = SQLコマンドの作成、削除、実行、その他の一般的なデータベース管理タスクを実行するためのメソッドを
         //読み込みを行うのでgetReadableDatabase()メソッドを使用
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -114,12 +116,12 @@ public class List extends AppCompatActivity implements OnDateSetListener {
                 db.close();
                 //ListViewのIDを取得
                 ListView listView = (ListView) findViewById(R.id.list);
-                //ListViewのsetAdapterメソッドを使って、取得したDB内のデータをセット、表示
+                //ListViewのsetAdapterメソッドを使って、取得したDB内のadapter(データ)をセット、表示
                 listView.setAdapter(adapter);
             }
         }catch(SQLException e){
             //例外発生時にエラーログを出力
-            Log.e("List","error",e);
+            Log.e("ListDisplay_Activity","error",e);
         }
     }
 
@@ -132,8 +134,9 @@ public class List extends AppCompatActivity implements OnDateSetListener {
         textView.setText(String.valueOf(year) + "/ " + String.valueOf(monthOfYear + 1) + "/ " + String.valueOf(dayOfMonth));
     }
 
+    //日選択のボタン押下で呼ばれるメソッド
     public void showDatePickerDialog(View v) {
-        //日選択ボタン押下時にカレンダー型デイトピッカーを表示
+        //カレンダー型デイトピッカーを表示
         DialogFragment newFragment = new DatePick();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }

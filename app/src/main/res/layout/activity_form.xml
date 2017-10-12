@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="#E6E6FA"
-    tools:context="com.example.naokihonda.calculator.Form"
+    tools:context="com.example.naokihonda.calculator.InputForm_Activity"
     >
 
     <LinearLayout
@@ -99,24 +99,24 @@
             android:layout_height="wrap_content">
 
             <RadioButton
-                android:id="@+id/rounddown_100"
+                android:id="@+id/roundup_100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="100円切り捨て"
+                android:text="100円切り上げ"
                 android:layout_marginTop="10dp"/>
 
             <RadioButton
-                android:id="@+id/rounddown_500"
+                android:id="@+id/roundup_500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="500円切り捨て"
+                android:text="500円切り上げ"
                 android:layout_marginTop="10dp"/>
 
             <RadioButton
-                android:id="@+id/rounddown_1000"
+                android:id="@+id/roundup_1000"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1000円切り捨て"
+                android:text="1000円切り上げ"
                 android:layout_marginTop="10dp"/>
 
             <RadioButton
@@ -142,5 +142,16 @@
         android:background="#66CDAA"
         android:textColor="#FFFFFF"/>
 
+    <Button
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今までの履歴を表示"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:background="#66CDAA"
+        android:textColor="#FFFFFF"
+        android:onClick="listView"
+        />
 
 </LinearLayout>

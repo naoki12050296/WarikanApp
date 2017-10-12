@@ -1,17 +1,15 @@
-package com.example.naokihonda.calculator;
+/*package com.example.naokihonda.calculator;
 
 import android.provider.BaseColumns;
 
-import static com.example.naokihonda.calculator.Form.warikan;
-
 /**
  * Created by naokihonda on 2017/09/25.
- */
+*
 
-public final class UserContract {
+public final class TableDefinition {
 
     //何もしない
-    public UserContract(){
+    public TableDefinition(){
 
     }
 
@@ -24,5 +22,4 @@ public final class UserContract {
         public static final String COL_RESULT = "result";
     }
 
-
-}
+}*/

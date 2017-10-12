@@ -15,32 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-import static com.example.naokihonda.calculator.Form.warikan;
+import static com.example.naokihonda.calculator.InputForm_Activity.warikanKingaku;
 
 /**
  * Created by naokihonda on 2017/09/18.
  */
 
-public class Result extends AppCompatActivity {
-
-    // InsertボタンのClickリスナー登録
-    private View.OnClickListener buttonInsert_ClickListener = new View.OnClickListener(){
-        //ボタンが押された時に呼ばれるメソッド
-        public void onClick(View v) {
-            buttonInsert_Click(v);
-        }
-    };
-
-    // DeleteボタンのClickリスナー登録
-    private View.OnClickListener buttonDelete_ClickListener = new View.OnClickListener(){
-        //ボタンが押された時に呼ばれるメソッド
-        public void onClick(View v) {
-            buttonDelete_Click(v);
-        }
-    };
+public class ResultDisplay_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +32,27 @@ public class Result extends AppCompatActivity {
         //Intentを受け取る
         Intent intent = getIntent();
         //Intentに保存されたデータを変数wにwarikanを代入
-        int w = intent.getIntExtra("EXTRA_WARIKAN", warikan);
+        int w = intent.getIntExtra("EXTRA_WARIKAN", warikanKingaku);
         //TextViewを取得
         TextView resultLabel = (TextView) findViewById(R.id.resultLabel);
         //取得したTextViewに割り勘金額をセット、表示
         resultLabel.setText(String.valueOf(w) + "円");
+
+        // InsertボタンのClickリスナー登録
+        View.OnClickListener buttonInsert_ClickListener = new View.OnClickListener(){
+            //ボタンが押された時に呼ばれるメソッド
+            public void onClick(View v) {
+                buttonInsert_Click(v);
+            }
+        };
+
+        // DeleteボタンのClickリスナー登録
+        View.OnClickListener buttonDelete_ClickListener = new View.OnClickListener(){
+            //ボタンが押された時に呼ばれるメソッド
+            public void onClick(View v) {
+                buttonDelete_Click(v);
+            }
+        };
 
         //ボタンにclickListenerを設定
         //今回のお会計を保存するボタンのIDを取得
@@ -86,7 +84,7 @@ public class Result extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
 
         //XMLからビューを取得（今後不変のためfinal）
-        final View layout = inflater.inflate(R.layout.title_input,null);
+        final View layout = inflater.inflate(R.layout.activity_title_input,null);
 
         //AlertDialog生成（今後不変のためfinal）
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -114,10 +112,10 @@ public class Result extends AppCompatActivity {
                 //データ（カラムと値のペア）を保存
                 values.put("Date", String.valueOf(date));
                 values.put("Title", title);
-                values.put("Result", warikan);
+                values.put("Result", warikanKingaku);
 
                 //DBの作成などを行うクラスをインスタンス化
-                UserOpenHelper dbHelper = new UserOpenHelper(Result.this);
+                UserOpenHelper dbHelper = new UserOpenHelper(ResultDisplay_Activity.this);
 
                 //書き込みを行うので getWritableDatabase()メソッドを使用（読み込みonlyならgetReadableDatabase()メソッド）
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -131,14 +129,12 @@ public class Result extends AppCompatActivity {
                 }
                 //失敗だった場合と成功だった場合でToastを出す
                 //エラーだった場合、-1が戻り値として返される
-                if (ret == -1) {
-                    Toast.makeText(Result.this,"Insert失敗", Toast.LENGTH_SHORT).show();
+                if(ret == -1){
+                    Toast.makeText(ResultDisplay_Activity.this,"Insert失敗", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(Result.this,"Insert成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ResultDisplay_Activity.this,"Insert成功", Toast.LENGTH_SHORT).show();
                 }
-
             }
-
         });
 
         //Cancelボタン設定
