@@ -26,7 +26,7 @@ public class InputForm_Activity extends AppCompatActivity {
     }
 
     //割り勘結果の金額のフィールド定義
-    public static Integer warikanKingaku = 0;
+    public static int warikanKingaku = 0;
 
     //電卓で計算する
     public void calculation(View view) {
@@ -65,7 +65,7 @@ public class InputForm_Activity extends AppCompatActivity {
                 persons.setError("0は入力できません");
             }
             else if(sum_price <= sum_persons){
-                persons.setError("合計人数が合計金額を超えています");
+                persons.setError("人数が合計金額を超えています");
             }
             //カンパ金額が入っていなかった時の処理
             //割ったものを変数warikanKingakuに代入
@@ -89,14 +89,19 @@ public class InputForm_Activity extends AppCompatActivity {
                 Campaign = campaign.getText().toString().trim();
                 int CamPaign = Integer.parseInt(Campaign);
 
-                //合計金額からカンパ金額を引いたものを合計人数で割り、結果を変数warikanに代入
-                warikanKingaku = (sum_price - CamPaign) / sum_persons;
+                if(CamPaign >= sum_price){
+                    campaign.setError("カンパ金額が合計金額を超えています");
+                }else {
 
-                //切り金額を取得
-                getRadiogroup();
+                    //合計金額からカンパ金額を引いたものを合計人数で割り、結果を変数warikanに代入
+                    warikanKingaku = (sum_price - CamPaign) / sum_persons;
 
-                //結果表示画面に遷移（割り勘金額の値を渡す）
-                forResultDisplay();
+                    //切り金額を取得
+                    getRadiogroup();
+
+                    //結果表示画面に遷移（割り勘金額の値を渡す）
+                    forResultDisplay();
+                }
             }
         }
     }
@@ -114,42 +119,24 @@ public class InputForm_Activity extends AppCompatActivity {
 
         // getId()でラジオボタンを識別し、ラジオボタンごとの処理を行う
         boolean checked = radioButton.isChecked();
-        int amari;
+        int Kirikingaku;
         switch (radioButton.getId()) {
             case R.id.roundup_100:
-                if (checked) {
-                    amari = (warikanKingaku % 100);
-                    if(amari != 0){
-                        warikanKingaku = (warikanKingaku / 100) + 1;
-                        warikanKingaku *= 100;
-                    }else{
-                        warikanKingaku = (warikanKingaku / 100);
-                        warikanKingaku *= 100;
-                    }
+                if(checked) {
+                    Kirikingaku = 100;
+                    Kirikeisan(Kirikingaku);
                 }
                 break;
             case R.id.roundup_500:
                 if (checked) {
-                    amari = (warikanKingaku % 500);
-                    if(amari != 0){
-                        warikanKingaku = (warikanKingaku / 500) + 1;
-                        warikanKingaku *= 500;
-                    }else{
-                        warikanKingaku = (warikanKingaku / 500);
-                        warikanKingaku *= 500;
-                    }
+                    Kirikingaku = 500;
+                    Kirikeisan(Kirikingaku);
                 }
                 break;
             case R.id.roundup_1000:
-                if (checked) {
-                    amari = (warikanKingaku % 1000);
-                    if(amari != 0){
-                        warikanKingaku = (warikanKingaku / 1000) + 1;
-                        warikanKingaku *= 1000;
-                    }else{
-                        warikanKingaku = (warikanKingaku / 1000);
-                        warikanKingaku *= 1000;
-                    }
+                if(checked) {
+                    Kirikingaku = 1000;
+                    Kirikeisan(Kirikingaku);
                 }
                 break;
             case R.id.radioButton_not:
@@ -158,6 +145,20 @@ public class InputForm_Activity extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+
+    }
+
+    private void Kirikeisan(int Kirikingaku){
+
+        int amari;
+        amari = (warikanKingaku % Kirikingaku);
+        if(amari != 0){
+            warikanKingaku = (warikanKingaku / Kirikingaku) + 1;
+            warikanKingaku *= Kirikingaku;
+        }else{
+            warikanKingaku = (warikanKingaku / Kirikingaku);
+            warikanKingaku *= Kirikingaku;
         }
     }
 

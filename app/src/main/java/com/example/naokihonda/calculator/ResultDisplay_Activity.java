@@ -5,8 +5,10 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.DateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Date;
+
+import io.realm.Realm;
 
 import static com.example.naokihonda.calculator.InputForm_Activity.warikanKingaku;
 
@@ -102,37 +106,42 @@ public class ResultDisplay_Activity extends AppCompatActivity {
                 ContentValues values = new ContentValues();
 
                 //現在日時をyyyy/MM/dd形式で取得する
-                Date date = new Date(System.currentTimeMillis());
+                Date date = new Date(System.currentTimeMillis());;
 
                 //AlertDialogの中のEditTextのIDを取得
                 EditText Title = (EditText)layout.findViewById(R.id.title);
                 //String型に変換
                 String title = Title.getText().toString().trim();
 
-                //データ（カラムと値のペア）を保存
-                values.put("Date", String.valueOf(date));
-                values.put("Title", title);
-                values.put("Result", warikanKingaku);
+                if(title.equals("")){
+                    Toast.makeText(ResultDisplay_Activity.this, "タイトルを入力してください", Toast.LENGTH_SHORT).show();
+                }else {
 
-                //DBの作成などを行うクラスをインスタンス化
-                UserOpenHelper dbHelper = new UserOpenHelper(ResultDisplay_Activity.this);
+                    //データ（カラムと値のペア）を保存
+                    values.put("Date", String.valueOf(date));
+                    values.put("Title", title);
+                    values.put("Result", warikanKingaku);
 
-                //書き込みを行うので getWritableDatabase()メソッドを使用（読み込みonlyならgetReadableDatabase()メソッド）
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                    //DBの作成などを行うクラスをインスタンス化
+                    UserOpenHelper dbHelper = new UserOpenHelper(ResultDisplay_Activity.this);
 
-                long ret;
-                try {
-                    //DBへデータ挿入
-                    ret = db.insert("MyTable", null, values);
-                } finally {
-                    db.close();
-                }
-                //失敗だった場合と成功だった場合でToastを出す
-                //エラーだった場合、-1が戻り値として返される
-                if(ret == -1){
-                    Toast.makeText(ResultDisplay_Activity.this,"Insert失敗", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ResultDisplay_Activity.this,"Insert成功", Toast.LENGTH_SHORT).show();
+                    //書き込みを行うので getWritableDatabase()メソッドを使用（読み込みonlyならgetReadableDatabase()メソッド）
+                    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                    long ret;
+                    try {
+                        //DBへデータ挿入
+                        ret = db.insert("MyTable", null, values);
+                    } finally {
+                        db.close();
+                    }
+                    //失敗だった場合と成功だった場合でToastを出す
+                    //エラーだった場合、-1が戻り値として返される
+                    if (ret == -1) {
+                        Toast.makeText(ResultDisplay_Activity.this, "Insert失敗", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ResultDisplay_Activity.this, "Insert成功", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -151,12 +160,39 @@ public class ResultDisplay_Activity extends AppCompatActivity {
     //DeleteボタンClick処理
     private void buttonDelete_Click(View v){
 
-        //DB削除処理
-        deleteDatabase("cal.db");
-        //削除したことをユーザーにわかりやすくするため、Toast表示
-        Toast.makeText(this, "Delete成功", Toast.LENGTH_SHORT).show();
+        //LayoutInflaterは、指定したxmlのレイアウト(View)リソースを利用できる仕組み
+        LayoutInflater layoutInflater = getLayoutInflater();
+
+        //XMLからビューを取得（今後不変のためfinal）
+        final View deletelayout = layoutInflater.inflate(R.layout.activity_delete_dialog,null);
+
+        //AlertDialog生成（今後不変のためfinal）
+        final AlertDialog.Builder deletebuilder = new AlertDialog.Builder(this);
+
+        //レイアウトを設定
+        deletebuilder.setView(deletelayout);
+
+        //okボタンを押したとき
+        deletebuilder.setPositiveButton("ok",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                //DB削除処理
+                deleteDatabase("cal.db");
+                //削除したことをユーザーにわかりやすくするため、Toast表示
+                Toast.makeText(ResultDisplay_Activity.this, "Delete成功", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        //Cancelボタン設定
+        deletebuilder.setNegativeButton("cancel",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                //キャンセルなので何もしない
+            }
+        });
+        //ダイアログの表示
+        deletebuilder.create().show();
+        }
     }
-}
+
 
 
 

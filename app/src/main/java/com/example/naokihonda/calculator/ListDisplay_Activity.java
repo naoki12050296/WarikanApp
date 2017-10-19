@@ -51,9 +51,9 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                     String str1 = csr.getString(1);
                     String str2 = csr.getString(2);
                     String str3 = csr.getString(3);
-                    adapter.add(str1);
-                    adapter.add(str2);
-                    adapter.add(str3);
+                    adapter.add(str1 + "        " + str2 + "        " + str3 +"円");
+                    //adapter.add(str2);
+                    //adapter.add(str3);
                     //[3]=priceまで取得したら、次の行へ移動
                     csr.moveToNext();
                 }
@@ -85,17 +85,27 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
 
                 //TextViewを取得
                 TextView date = (TextView) findViewById(R.id.search_day);
+
                 //String型に変換
                 String Date = date.getText().toString().trim();
 
                 //TextViewを取得
                 EditText title = (EditText) findViewById(R.id.search_word);
+
                 //String型に変換
                 String Title = title.getText().toString().trim();
 
                 //日付かタイトルの条件にあったものを抽出
-                String sql = "SELECT * FROM MyTable WHERE title like '%"+ Title +"%' OR strftime('%Y/ %tm/ %td',date) like '%"+ Date+"%'";
-
+                String sql = null;
+                if (Date == "" && Title.equals("")) {
+                    sql = "SELECT * FROM MyTable";
+                } else if (Title.equals("") && Date != "") {
+                    sql = "SELECT * FROM MyTable WHERE strftime('%Y/ %m/ %d',date) like '%"+Date+"%'";
+                } else if (Date == "") {
+                    sql = "SELECT * FROM MyTable WHERE title like '%" + Title + "%'";
+                }else{
+                    sql = "SELECT * FROM MyTable WHERE title like '%" + Title + "%' and strftime('%Y/ %m/ %d',date) like '%"+Date+"%'";
+                }
                 //Cursor(カーソル）クラスを使って、抽出したDB内のデータを取得
                 Cursor csr = db.rawQuery(sql, null);
                 //カーソルをレコードの先頭行へ移動
@@ -105,9 +115,9 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                     String str1 = csr.getString(1);
                     String str2 = csr.getString(2);
                     String str3 = csr.getString(3);
-                    adapter.add(str1);
-                    adapter.add(str2);
-                    adapter.add(str3);
+                    adapter.add(str1 + str2 + str3);
+                    //adapter.add(str2);
+                    //adapter.add(str3);
                     csr.moveToNext();
                 }
                 //カーソルを終了
@@ -131,7 +141,7 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
         //TextViewを取得
         TextView textView = (TextView) findViewById(R.id.search_day);
         //デイトピッカーで選択した日付をテキストにセット
-        textView.setText(String.valueOf(year) + "/ " + String.valueOf(monthOfYear + 1) + "/ " + String.valueOf(dayOfMonth));
+        textView.setText(String.format("%d/ %02d/ %02d", year, monthOfYear + 1, dayOfMonth));
     }
 
     //日選択のボタン押下で呼ばれるメソッド
