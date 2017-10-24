@@ -35,7 +35,6 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         if (db != null) {
-            try {
                 //データの一覧をリストなどのビューに渡すために使用されるクラス
                 //ArrayAdapter<String>型の変数adapterにandroidにデフォルトで入っているViewをセット
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -65,16 +64,10 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                 ListView listView = (ListView) findViewById(R.id.list);
                 //ListViewのsetAdapterメソッドを使って、取得したDB内のデータをセット、表示
                 listView.setAdapter(adapter);
-            } catch (SQLException e) {
-                //例外発生時にエラーログを出力
-                Log.e("SQL","error",e);
-            }
         }
     }
 
     public void searchList(View view) {
-
-        try {
             //DBの作成などを行うクラスをインスタンス化
             UserOpenHelper dbhelper = new UserOpenHelper(this);
             //読み込みを行うのでgetReadableDatabase()メソッドを使用
@@ -115,7 +108,7 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                     String str1 = csr.getString(1);
                     String str2 = csr.getString(2);
                     String str3 = csr.getString(3);
-                    adapter.add(str1 + str2 + str3);
+                    adapter.add(str1 + "        " + str2 + "        " + str3 +"円");
                     //adapter.add(str2);
                     //adapter.add(str3);
                     csr.moveToNext();
@@ -129,10 +122,6 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                 //ListViewのsetAdapterメソッドを使って、取得したDB内のadapter(データ)をセット、表示
                 listView.setAdapter(adapter);
             }
-        }catch(SQLException e){
-            //例外発生時にエラーログを出力
-            Log.e("ListDisplay_Activity","error",e);
-        }
     }
 
     //Dialogの中のOK押下で呼ばれるメソッド

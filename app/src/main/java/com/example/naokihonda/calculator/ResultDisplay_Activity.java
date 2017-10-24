@@ -17,10 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 import io.realm.Realm;
 
-import static com.example.naokihonda.calculator.InputForm_Activity.warikanKingaku;
+import static com.example.naokihonda.calculator.InputForm_Activity.iwarikanKingaku;
 
 /**
  * Created by naokihonda on 2017/09/18.
@@ -35,14 +36,17 @@ public class ResultDisplay_Activity extends AppCompatActivity {
 
         //Intentを受け取る
         Intent intent = getIntent();
-        //Intentに保存されたデータを変数wにwarikanを代入
-        int w = intent.getIntExtra("EXTRA_WARIKAN", warikanKingaku);
+
+        //Intentに保存されたデータを変数wにiwarikanKingakuを代入
+        int w = intent.getIntExtra("EXTRA_WARIKAN", iwarikanKingaku);
+
         //TextViewを取得
         TextView resultLabel = (TextView) findViewById(R.id.resultLabel);
-        //取得したTextViewに割り勘金額をセット、表示
-        resultLabel.setText(String.valueOf(w) + "円");
 
-        // InsertボタンのClickリスナー登録
+        //取得したTextViewに割り勘金額をセット、表示
+        resultLabel.setText(w + "円");
+
+        // InsertボタンのClickリスナー登録（リスナーの定義：呼ばれた時にどういった処理をするか）
         View.OnClickListener buttonInsert_ClickListener = new View.OnClickListener(){
             //ボタンが押された時に呼ばれるメソッド
             public void onClick(View v) {
@@ -76,16 +80,13 @@ public class ResultDisplay_Activity extends AppCompatActivity {
         //LayoutInflaterは、指定したxmlのレイアウト(View)リソースを利用できる仕組み
 
         // コンテキストから取得
-        //LayoutInflater inflater = LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
 
         // アクティビティから取得
         //LayoutInflater inflater = getLayoutInflater();
 
         // システムサービスから取得
         //LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-        LayoutInflater inflater = getLayoutInflater();
 
         //XMLからビューを取得（今後不変のためfinal）
         final View layout = inflater.inflate(R.layout.activity_title_input,null);
@@ -110,6 +111,7 @@ public class ResultDisplay_Activity extends AppCompatActivity {
 
                 //AlertDialogの中のEditTextのIDを取得
                 EditText Title = (EditText)layout.findViewById(R.id.title);
+
                 //String型に変換
                 String title = Title.getText().toString().trim();
 
@@ -120,7 +122,7 @@ public class ResultDisplay_Activity extends AppCompatActivity {
                     //データ（カラムと値のペア）を保存
                     values.put("Date", String.valueOf(date));
                     values.put("Title", title);
-                    values.put("Result", warikanKingaku);
+                    values.put("Result", iwarikanKingaku);
 
                     //DBの作成などを行うクラスをインスタンス化
                     UserOpenHelper dbHelper = new UserOpenHelper(ResultDisplay_Activity.this);
@@ -185,7 +187,7 @@ public class ResultDisplay_Activity extends AppCompatActivity {
         //Cancelボタン設定
         deletebuilder.setNegativeButton("cancel",new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog, int which){
-                //キャンセルなので何もしない
+                Toast.makeText(ResultDisplay_Activity.this, "履歴を消去しませんでした", Toast.LENGTH_SHORT).show();
             }
         });
         //ダイアログの表示

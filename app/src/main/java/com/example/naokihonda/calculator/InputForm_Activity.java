@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.text.DecimalFormat;
+
 import static com.example.naokihonda.calculator.R.id.sumPrice;
 import static com.example.naokihonda.calculator.R.string.sum_price;
 
@@ -26,7 +28,8 @@ public class InputForm_Activity extends AppCompatActivity {
     }
 
     //割り勘結果の金額のフィールド定義
-    public static int warikanKingaku = 0;
+    public static double dwarikanKingaku = 0;
+    public static int iwarikanKingaku = 0;
 
     //電卓で計算する
     public void calculation(View view) {
@@ -54,9 +57,9 @@ public class InputForm_Activity extends AppCompatActivity {
 
         else{
 
-            //合計金額と合計人数を計算に用いるため、int型に変換
-            int sum_price = Integer.parseInt(sumPrice);
-            int sum_persons = Integer.parseInt(Persons);
+            //合計金額と合計人数を計算に用いるため、double型に変換(小数点以下を後で切り上げるため、ここではdoubleにしている）
+            double sum_price = Integer.parseInt(sumPrice);
+            double sum_persons = Integer.parseInt(Persons);
 
             if(sum_price == 0){
                 sumprice.setError("0は入力できません");
@@ -64,15 +67,18 @@ public class InputForm_Activity extends AppCompatActivity {
             else if(sum_persons == 0){
                 persons.setError("0は入力できません");
             }
-            else if(sum_price <= sum_persons){
+            else if(sum_price < sum_persons){
                 persons.setError("人数が合計金額を超えています");
             }
             //カンパ金額が入っていなかった時の処理
-            //割ったものを変数warikanKingakuに代入
+            //割ったものを変数dwarikanKingakuに代入
             else if (Campaign.equals("")) {
 
                 //カンパ金額が入っていなかったら、単純に合計金額を合計人数で割る
-                warikanKingaku = sum_price / sum_persons;
+                dwarikanKingaku = sum_price / sum_persons;
+
+                //小数点以下切り上げる
+                roundup();
 
                 //切り金額を取得
                 getRadiogroup();
@@ -87,14 +93,17 @@ public class InputForm_Activity extends AppCompatActivity {
                 //カンパ金額を取得し、String型に変換、計算に用いるためにint型に変換（いきなりintに変換はできない）
                 campaign = (EditText) findViewById(R.id.campaign);
                 Campaign = campaign.getText().toString().trim();
-                int CamPaign = Integer.parseInt(Campaign);
+                double CamPaign = Integer.parseInt(Campaign);
 
                 if(CamPaign >= sum_price){
                     campaign.setError("カンパ金額が合計金額を超えています");
                 }else {
 
                     //合計金額からカンパ金額を引いたものを合計人数で割り、結果を変数warikanに代入
-                    warikanKingaku = (sum_price - CamPaign) / sum_persons;
+                    dwarikanKingaku = (sum_price - CamPaign) / sum_persons;
+
+                    //小数点以下切り捨て処理
+                    roundup();
 
                     //切り金額を取得
                     getRadiogroup();
@@ -104,6 +113,18 @@ public class InputForm_Activity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void roundup(){
+
+        //dwarikanKingakuを切り上げ処理
+        dwarikanKingaku = Math.ceil(dwarikanKingaku);
+
+        //DecimalFormatクラスをインスタンス化（小数点以下表示なしのフォーマット定義）
+        DecimalFormat dc = new DecimalFormat("0.#");
+
+        //上記のインスタンス化したクラスを使用し、小数点以下のくらいを表示しないint型に変換
+        iwarikanKingaku = Integer.parseInt(dc.format(dwarikanKingaku));
     }
 
     public void getRadiogroup() {
@@ -152,13 +173,13 @@ public class InputForm_Activity extends AppCompatActivity {
     private void Kirikeisan(int Kirikingaku){
 
         int amari;
-        amari = (warikanKingaku % Kirikingaku);
+        amari = (iwarikanKingaku % Kirikingaku);
         if(amari != 0){
-            warikanKingaku = (warikanKingaku / Kirikingaku) + 1;
-            warikanKingaku *= Kirikingaku;
+            iwarikanKingaku = (iwarikanKingaku / Kirikingaku) + 1;
+            iwarikanKingaku *= Kirikingaku;
         }else{
-            warikanKingaku = (warikanKingaku / Kirikingaku);
-            warikanKingaku *= Kirikingaku;
+            iwarikanKingaku = (iwarikanKingaku / Kirikingaku);
+            iwarikanKingaku *= Kirikingaku;
         }
     }
 
@@ -167,7 +188,7 @@ public class InputForm_Activity extends AppCompatActivity {
         //Intentクラスをインスタンス生成、行き先指定
         Intent intent = new Intent(getApplication(), ResultDisplay_Activity.class);
         //putExtraで行き先に渡す値とキーを設定
-        intent.putExtra("EXTRA_WARIKAN", warikanKingaku);
+        intent.putExtra("EXTRA_WARIKAN", iwarikanKingaku);
         //startActivityで行き先の画面を起動
         startActivity(intent);
     }
