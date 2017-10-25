@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Form">
+        android:theme="@style/AppTheme"
+        >
+        <activity android:name=".InputForm_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,11 +18,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".result"
-            android:parentActivityName="com.example.naokihonda.calculator.Form"
+            android:name=".ResultDisplay_Activity"
+            android:parentActivityName="com.example.naokihonda.calculator.InputForm_Activity"
             android:label="計算結果">
-
         </activity>
+
+        <activity
+            android:name=".ListDisplay_Activity"
+            android:label="履歴一覧">
+        </activity>
+
     </application>
 
 </manifest>

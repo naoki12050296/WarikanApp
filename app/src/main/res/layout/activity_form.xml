@@ -30,7 +30,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="text" />
+            android:maxLines="1"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="9"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -51,7 +55,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/persons"/>
+            android:id="@+id/persons"
+            android:inputType="number"
+            android:maxLines="1"
+            android:digits="0123456789"
+            android:maxLength="9" />
 
     </LinearLayout>
 
@@ -71,10 +79,14 @@
 
 
         <EditText
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/campaign"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:maxLines="1"
+            android:id="@+id/campaign"
+            android:digits="0123456789"
+            android:maxLength="9"/>
 
     </LinearLayout>
 

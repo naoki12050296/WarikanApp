@@ -16,6 +16,9 @@ android:padding="10dp">
 <EditText
     android:id="@+id/title"
     android:layout_width="200dp"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:hint="12文字以内で入力"
+    android:maxLength="12"
+    />
 
 </LinearLayout>
