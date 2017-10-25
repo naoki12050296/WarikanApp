@@ -23,6 +23,9 @@ import android.support.v4.app.DialogFragment;
 //onDateSetListener = ユーザーが日付の選択を終了したことを示すために使用されるリスナー
 public class ListDisplay_Activity extends AppCompatActivity implements OnDateSetListener {
 
+    public static String Title;
+    public static String Date;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
@@ -80,13 +83,13 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
                 TextView date = (TextView) findViewById(R.id.search_day);
 
                 //String型に変換
-                String Date = date.getText().toString().trim();
+                Date = date.getText().toString().trim();
 
                 //TextViewを取得
                 EditText title = (EditText) findViewById(R.id.search_word);
 
                 //String型に変換
-                String Title = title.getText().toString().trim();
+                Title = title.getText().toString().trim();
 
                 //日付かタイトルの条件にあったものを抽出
                 String sql = null;
@@ -138,5 +141,18 @@ public class ListDisplay_Activity extends AppCompatActivity implements OnDateSet
         //カレンダー型デイトピッカーを表示
         DialogFragment newFragment = new DatePick();
         newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    //検索条件をリセットするメソッド
+    public void clear(View view){
+        //検索対象文字を取得
+        EditText t = (EditText)findViewById(R.id.search_word);
+        //中身クリアする
+        t.getText().clear();
+
+        //表示日付を取得
+        TextView d = (TextView)findViewById(R.id.search_day);
+        //中身をクリアする
+        d.getEditableText().clear();
     }
 }
